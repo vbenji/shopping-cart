@@ -1,0 +1,59 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:9.6
+    container_name: postgres
+    environment:
+    - POSTGRES_DB=myDatabase
+    - POSTGRES_USER=databaseUser 
+    - POSTGRES_PASSWORD=databasePassword
+    volumes:
+    - postgres:/var/lib/postgresl/data:rw
+    networks:
+      backend:
+        aliases:
+        - postgres
+
+  backend:
+    build: 
+      context: ./backend
+    image: shopping-cart:1.0
+    container_name: api-server
+    depends_on: 
+    - postgres
+    environment:
+    - DATABASE_HOST=postgres
+    - DATABASE_PORT=5432
+    - DATABASE_USER=databaseUser
+    - DATABASE_PASSWORD=databasePassword
+    - DATABASE_NAME=myDatabase
+    networks:
+      backend:
+        aliases: 
+        - api-server
+      frontend:
+        aliases: 
+        - api-server
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    image: shopping-cart-front:1.0
+    container_name: frontend
+    ports:
+    - 3000:3000
+    networks:
+      frontend:
+        aliases: 
+        - frontend
+
+volumes:
+  postgres:
+    name: postgres
+
+networks:
+  backend:
+    name: backend
+  frontend:
+    name: frontend

@@ -1,0 +1,8 @@
+
+FROM nginx:1.17
+
+COPY nginx/ /etc/nginx/
+
+WORKDIR /usr/share/nginx/html
+
+COPY ./build/ /usr/share/nginx/html

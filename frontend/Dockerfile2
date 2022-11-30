@@ -1,0 +1,8 @@
+
+FROM node:10.16
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+CMD ["npm", "run", "start-js"]
